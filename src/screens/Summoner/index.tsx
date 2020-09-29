@@ -1,8 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import axios from '../../services/axios';
 import {SummonerFind} from '../../types/matchSummoner';
+import Status from '../../components/Status';
 
 import styles from './styles';
 
@@ -20,6 +23,31 @@ interface Props {
 
 const Summoner: React.FC<Props> = (props) => {
   const [summoner, setSummoner] = useState({});
+  const [logged, setloggend] = useState(false);
+  const [isFav, setIsFav] = useState(false);
+  const [token, setToken] = useState('');
+
+  async function getLogged() {
+    try {
+      const value = await AsyncStorage.getItem('token');
+      if (value !== null) {
+        setloggend(true);
+        setToken(value);
+        const favoriteReq = await axios.post('/summoner/favs', {token: value});
+        const favoriteData = favoriteReq.data;
+        favoriteData.summoners.map((fav) => {
+          if (
+            fav.summoner.toLowerCase() ===
+            props.route.params.summoner.toLowerCase()
+          ) {
+            setIsFav(true);
+          }
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   useEffect(() => {
     async function getData() {
@@ -29,6 +57,8 @@ const Summoner: React.FC<Props> = (props) => {
       });
       const data = summonerAxios.data;
       setSummoner(data);
+      getLogged();
+      console.log(token);
     }
     getData();
   }, []);
@@ -41,8 +71,26 @@ const Summoner: React.FC<Props> = (props) => {
     }
   }
 
+  async function removeFav() {
+    await axios.post('/summoner/delete', {
+      token: token,
+      summoner: summoner.summoner.name,
+    });
+    setIsFav(false);
+  }
+  async function addFav() {
+    await axios.post('/summoner', {
+      token: token,
+      summoner: summoner.summoner.name,
+      profileicon: summoner.summoner.profileIcon,
+      region: props.route.params.region,
+    });
+    setIsFav(true);
+  }
+
   return (
     <>
+      <Status />
       {!summoner.summoner && !summoner.errors && (
         <View style={styles.container} />
       )}
@@ -59,7 +107,17 @@ const Summoner: React.FC<Props> = (props) => {
             style={styles.profImage}
             source={{uri: summoner.summoner.profileIcon}}
           />
-          <Text style={styles.summonerName}>{summoner.summoner.name}</Text>
+
+          <View style={styles.nameAndStar}>
+            <Text style={styles.summonerName}>{summoner.summoner.name}</Text>
+            {logged && (
+              <TouchableOpacity onPress={isFav ? removeFav : addFav}>
+                {isFav && <Icon name="star" color="#f4d35e" size={40} />}
+                {!isFav && <Icon name="star" color="#444" size={40} />}
+              </TouchableOpacity>
+            )}
+          </View>
+
           <TouchableOpacity
             style={styles.partidaButton}
             onPress={() => {

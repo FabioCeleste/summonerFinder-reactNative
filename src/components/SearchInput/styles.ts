@@ -19,9 +19,9 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 16,
     height: 35,
+    width: 70,
     backgroundColor: commonStyles.colors.input,
     borderRadius: 12,
-    textAlign: 'center',
   },
   searchIcon: {
     padding: 10,

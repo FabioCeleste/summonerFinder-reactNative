@@ -8,8 +8,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: 244,
-    height: 214,
+    width: 225,
+    height: 197,
     marginTop: 32,
   },
   favs: {
@@ -31,6 +31,14 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 32,
     alignSelf: 'center',
+  },
+
+  favssummons: {
+    flexDirection: 'row',
+
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    marginTop: 16,
   },
 });
 

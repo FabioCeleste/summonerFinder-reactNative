@@ -3,6 +3,7 @@ import {View, FlatList, ScrollView, Text} from 'react-native';
 import {MatchResult, MatchSummoner} from '../../types/matchSummoner';
 
 import PlayerMatch from '../../components/PlayerMatch';
+import Status from '../../components/Status';
 
 import axios from '../../services/axios';
 
@@ -43,6 +44,8 @@ const Match: React.FC<Props> = (props) => {
 
   return (
     <>
+      <Status />
+
       {!load && (
         <View style={styles.containerNotFound}>
           <Text style={styles.notFound}>Carregando...</Text>

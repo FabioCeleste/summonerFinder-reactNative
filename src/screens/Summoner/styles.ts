@@ -19,9 +19,8 @@ const styles = StyleSheet.create({
 
   summonerName: {
     color: 'white',
-    marginTop: 32,
+    marginRight: 16,
     fontSize: 32,
-    alignSelf: 'center',
   },
 
   partidaButton: {
@@ -75,6 +74,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center',
+  },
+  nameAndStar: {
+    flexDirection: 'row',
+    marginTop: 32,
+    alignSelf: 'center',
   },
 });
 
